@@ -1,5 +1,8 @@
+<p><%= notice %></p>
 <h1>listing users</h1>
 <%= link_to 'new user', new_user_path%>
+
+</div>
 <table>
 <thead>
 <tr>
@@ -17,8 +20,9 @@
 <td><%=user.phone_number %></td>
 <td><%= link_to 'view', user %></td>
 <td><%= link_to 'edit', edit_user_path(user) %></td>
-<td><%= link_to 'delete', user, method: :delete, data: {confirm: 'are you sure'} %></td>
+<td><%= link_to 'delete', user,  method: :delete, data: {confirm: 'are you sure?'} %></td>
 </tr>
 <% end %>
 </tbody>
 </table>
+<%= paginate @users%>
