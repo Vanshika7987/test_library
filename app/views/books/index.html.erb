@@ -1,0 +1,41 @@
+<h1>Book Details</h1>
+<td><%= link_to 'new book', new_book_path %></td>
+<%# <%= form_tag(books_path, :method => "get", id: "search-form") do %>
+  <%# <%= text_field_tag :search, params[:search], placeholder: "Search books" %>
+  <%# <%= s=begin ubmit_tag "Search" %> 
+<%# <% end %>
+<%= search_form_for @q, url: :books do |form |%>
+<div>
+<%= form.label :name %>
+<%= form.search_field :name_cont, class: "form-control" %>
+</div>
+<div class= "form-group">
+<%= form.submit class: "btn btn-primary btn-lg" %>
+</div>
+<% end %>
+<table>
+  <thead>
+    <tr>
+      <th>Library_id</th>
+      <th>Books name</th>
+      <th>Author</th>
+      <th>Language</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @books.each do |book| %>
+      <tr>
+        <td><%= book.library_id%></td>
+        <td><%= book.name %></td>
+        <td><%= book.author %></td>
+        <td><%= book.language %></td>
+        <td><%= link_to 'Show', book_path(book) %></td>
+        <td><%= link_to 'Edit', edit_book_path(book) %></td>
+        <%# <td><%= link_to 'create', new_book_path(book) %></td> %>
+        <td><%= link_to "Destroy", book_path(book.id), method: "DELETE" %></td>
+        <td><%#= link_to 'Destroy', students_path, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

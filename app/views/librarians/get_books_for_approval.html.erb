@@ -1,0 +1,48 @@
+<%# <head>
+<script>
+$(document).ready(function(){
+    $('.approve').on('click',function(){
+        $.ajax({
+            url: '/librarians/' + this.parentElement.id + '/approve',
+            type: 'GET',
+            success: function(r){
+
+            }
+        });
+    });
+});
+
+</script> %>
+<%# </head> %>
+<table>
+  <thead>
+    <tr>
+      <th>Student name</th>
+      <th>Student id</th>
+      <th>Books name</th>
+      <th>Author</th>
+      <th>Language</th>
+      <th>approve</th>
+      <th>ignore</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%# @request_users.each do |user| %>
+    <% @requests.each do |request| %>
+      <tr id = '<%= request.id %>' >
+      <div class = "container">
+        <td><%= User.find(request.students_id).name %></td>
+        <td><%= request.students_id %></td>
+        <td><%= Book.find(request.book_id).name %></td>
+        <td><%= Book.find(request.book_id).author %></td>
+        <td><%= Book.find(request.book_id).language %></td>
+        <td><%= request.request_for %></td>
+        <td class = 'approve'><button>approve</button></td>
+        <td class = 'ignore'><button>ignore</button></td>
+        </div>
+        </tr>
+    <% end %>
+    <%# end %>
+  </tbody>
+</table>

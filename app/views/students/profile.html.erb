@@ -1,0 +1,9 @@
+<h1> students details</h1>
+<p><strong>name:</strong><%= current_user.name%></p>
+<p><strong>role:</strong><%= current_user.role%></p>
+<p><strong>phone_number:</strong><%= current_user.phone_number%></p>
+<%= link_to 'edit', edit_user_registration_path %>
+<%= link_to 'book_list', book_list_books_path %>
+<%= link_to 'History', myhistory_students_path %>
+ <%= link_to "Log out", destroy_user_session_path, method: :delete %>
+<%= link_to "Back", :back %>

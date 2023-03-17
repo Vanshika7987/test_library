@@ -1,0 +1,19 @@
+<table>
+  <thead>
+    <tr>
+      <th>Books name</th>
+      <th>Author</th>
+      <th>Language</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+        <% @book.each do |book| %>
+        <tr>
+        <td><%= book.name %></td>
+        <td><%= book.author %></td>
+        <td><%= book.language %></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>

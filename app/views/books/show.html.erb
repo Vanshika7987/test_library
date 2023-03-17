@@ -1,0 +1,10 @@
+<h1>Book details</h1>
+<p><strong>name:</strong><%= @book.name%></p>
+<p><strong>library_id:</strong><%= @book.library_id%></p>
+<p><strong>language:</strong><%= @book.language%></p>
+<p><strong>author:</strong><%= @book.author%></p>
+<p><strong>issued to:</strong><%= @book.issued_to_id%></p>
+<p><strong>author:</strong><%= @book.issued_to_at %></p>
+<p><strong>author:</strong><%= @book.issued_from_at%></p>
+<%= link_to 'edit', edit_book_path %>
+<%= link_to "Back", :back %>

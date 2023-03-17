@@ -10,28 +10,84 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_22_061531) do
-  create_table "books", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2023_03_16_113016) do
+  create_table "book_requests", force: :cascade do |t|
+    t.integer "book_id"
+    t.integer "library_id"
+    t.integer "students_id"
+    t.datetime "request_to"
+    t.datetime "request_from"
+    t.boolean "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.string "request_for"
+    t.index ["book_id"], name: "index_book_requests_on_book_id"
+    t.index ["deleted_at"], name: "index_book_requests_on_deleted_at"
+    t.index ["library_id"], name: "index_book_requests_on_library_id"
+    t.index ["students_id"], name: "index_book_requests_on_students_id"
+  end
+
+  create_table "books", force: :cascade do |t|
+    t.string "name"
+    t.string "author"
+    t.string "language"
+    t.integer "library_id"
+    t.datetime "issued_from_at"
+    t.datetime "issued_to_at"
+    t.integer "issued_to_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["issued_to_id"], name: "index_books_on_issued_to_id"
+    t.index ["library_id"], name: "index_books_on_library_id"
   end
 
   create_table "histories", force: :cascade do |t|
+    t.integer "book_id"
+    t.integer "issued_to_id"
+    t.datetime "issued_from_at"
+    t.datetime "issued_to_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "event"
+    t.index ["book_id"], name: "index_histories_on_book_id"
+    t.index ["issued_to_id"], name: "index_histories_on_issued_to_id"
   end
 
   create_table "libraries", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.integer "librarian_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["librarian_id"], name: "index_libraries_on_librarian_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
-    t.string "role"
+    t.integer "role", default: 0
     t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "book_requests", "books"
+  add_foreign_key "book_requests", "libraries"
+  add_foreign_key "book_requests", "users", column: "students_id"
+  add_foreign_key "books", "libraries"
+  add_foreign_key "books", "users", column: "issued_to_id"
+  add_foreign_key "histories", "books"
+  add_foreign_key "histories", "users", column: "issued_to_id"
+  add_foreign_key "libraries", "users", column: "librarian_id"
 end

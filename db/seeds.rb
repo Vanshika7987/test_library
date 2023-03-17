@@ -7,8 +7,12 @@
 #   Character.create(name: "Luke", movie: movies.first)
 user = User.create({
 
-    name: 'Vanshika',
-    role: 'studentt',
-    phone_number: '8349074537'
-}
-)
+                     name: 'Vanshika',
+                     role: 'student',
+                     phone_number: '8349074537'
+                   })
+library = Library.create({
+                           name: 'xyz',
+                           address: 'indore',
+                           librarian_id: 8
+                         })
