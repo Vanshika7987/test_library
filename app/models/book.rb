@@ -1,7 +1,7 @@
 class Book < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :library
-
+  has_many :book_dues
   # def self.search(search)
   #   where('name LIKE ?', "%#{search}%")
   # end

@@ -6,6 +6,8 @@ class User < ApplicationRecord
   has_many :student_specific_book_issue_requests, foreign_key: 'student_id'
   has_many :my_requested_books, through: :student_specific_book_issue_requests
 
+  has_many :book_dues
+
   has_one :library, foreign_key: 'librarian_id'
 
   validates :name, :role, :phone_number, presence: true

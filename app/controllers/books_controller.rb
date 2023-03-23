@@ -1,5 +1,6 @@
 class BooksController < ApplicationController
   before_action :set_book, only: %i[show edit update destroy book_detail checkout return_book]
+  before_action :authenticate_user!, except: %i[index show]
   def index
     # @books = if params[:search]
     #            Book.search(params[:search]).order('created_at desc')
@@ -21,6 +22,7 @@ class BooksController < ApplicationController
 
   def create
     @book = Book.new(book_params)
+    authorize(@book)
     @book.library_id = current_user.library.id
     if @book.save
       redirect_to books_path, notice: 'book created'
@@ -52,22 +54,24 @@ class BooksController < ApplicationController
     @book_return_request.library_id = @book.library_id
     @book_return_request.request_for = 'return'
     @book_return_request.save
-    # history = History.new
-    # history.book_id = @book_id
-    # history.issued_to_id = current_user.id
-    # history.event = 'returned'
-    # history.save
+    return unless @book.issued_to_at < Date.current
+
+    bookdue = BookDue.new
+    bookdue.book_id = @book.id
+    bookdue.student_id_id = current_user.id
+    bookdue.fine = (Date.current.to_date - @book.issued_to_at.to_date).to_i * 5
+    bookdue.save
   end
 
   def book_detail
-    # @book_issue_request = BookRequest.new
     @book_issue_request = BookRequest.find_by(book_id: @book.id, students_id: current_user.id)
-    # @book_issue_request.students_id = current_user.id
   end
 
   def show; end
 
-  def edit; end
+  def edit
+    authorize @book
+  end
 
   def update
     if @book.update(book_params)

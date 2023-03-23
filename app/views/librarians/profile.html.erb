@@ -1,9 +1,10 @@
 <h1> librarian details</h1>
-<p><strong>name:</strong><%= current_user.name%></p>
-<p><strong>role:</strong><%= current_user.role%></p>
-<p><strong>phone_number:</strong><%= current_user.phone_number%></p>
-<%= link_to 'edit', edit_user_registration_path %>
-<%= link_to 'books', books_path %>
-<%= link_to 'myrequests', get_books_for_approval_librarians_path %>
-<%= link_to "Log out", destroy_user_session_path, method: :delete %>
-<%= link_to "Back", :back %>
+    <p><strong>name:</strong><%= current_user.name%></p>
+    <p><strong>role:</strong><%= current_user.role%></p>
+    <p><strong>phone_number:</strong><%= current_user.phone_number%></p>
+
+    <%= link_to 'edit', edit_user_registration_path %>
+    <%= link_to 'books', books_path %>
+    <%= link_to 'myrequests', get_books_for_approval_librarians_path %>
+    <%= link_to "Log out", destroy_user_session_path, method: :delete %>
+    <%= link_to "Back", :back %>

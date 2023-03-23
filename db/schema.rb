@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_16_113016) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_22_085507) do
+  create_table "book_dues", force: :cascade do |t|
+    t.integer "book_id"
+    t.integer "students_id_id"
+    t.integer "fine"
+    t.datetime "return_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_book_dues_on_book_id"
+    t.index ["students_id_id"], name: "index_book_dues_on_students_id_id"
+  end
+
   create_table "book_requests", force: :cascade do |t|
     t.integer "book_id"
     t.integer "library_id"
@@ -82,6 +93,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_16_113016) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "book_dues", "books"
+  add_foreign_key "book_dues", "users", column: "students_id_id"
   add_foreign_key "book_requests", "books"
   add_foreign_key "book_requests", "libraries"
   add_foreign_key "book_requests", "users", column: "students_id"

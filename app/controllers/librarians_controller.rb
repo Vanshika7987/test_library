@@ -5,15 +5,9 @@ class LibrariansController < ApplicationController
 
   def profile; end
 
-  # @bks = Book.where(id: @bookissuerequest.pluck(:book_id))
-  # def request(_request)
-  # end
-
   def get_books_for_approval
     @library = Library.find_by(librarian_id: current_user.id)
     @requests = BookRequest.where(library_id: @library.id)
-    # @requested_student_books = Book.where(id: @request.pluck(:book_id))
-    # @requested_users = User.where(id: @request.pluck(:students_id))
   end
 
   def approve
@@ -44,7 +38,6 @@ class LibrariansController < ApplicationController
       book.issued_to_id = nil
       book.save
     end
-    # render json: { data: @book_request.id }
     @book_request.destroy
   end
 
