@@ -1,15 +1,19 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
+  before_action :authenticate_user!
+  after_action :verify_authorized, unless: :devise_controller?
+  before_action :configure_permitted_parameter, if: :devise_controller?
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   private
 
   def user_not_authorized
+    return unless current_user.student?
+
     flash[:alert] = 'you are not authorized user'
     redirect_to(request.referrer || root_path)
   end
-  before_action :configure_permitted_parameter, if: :devise_controller?
 
   protected
 

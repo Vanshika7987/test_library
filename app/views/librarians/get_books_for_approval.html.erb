@@ -15,11 +15,11 @@
     <% @requests.each do |request| %>
       <tr id = '<%= request.id %>' >
       <div class = "container">
-        <td><%= User.find(request.students_id).name %></td>
-        <td><%= request.students_id %></td>
-        <td><%= Book.find(request.book_id).name %></td>
-        <td><%= Book.find(request.book_id).author %></td>
-        <td><%= Book.find(request.book_id).language %></td>
+        <td><%= request.student.name %></td>
+        <td><%= request.student_id %></td>
+        <td><%= request.book.name %></td>
+        <td><%= request.book.author %></td>
+        <td><%= request.book.language %></td>
         <td><%= request.request_for %></td>
         <td class = 'approve'><button>approve</button></td>
         <td class = 'ignore'><button>ignore</button></td>

@@ -6,3 +6,7 @@ import "controllers"
 import "jquery"
 import "jquery_ujs"
 import "custom/main"
+import "@popperjs/core";
+import "bootstrap";
+import "@fortawesome/fontawesome-free";
+import "my_script";

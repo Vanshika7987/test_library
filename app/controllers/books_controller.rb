@@ -1,89 +1,85 @@
 class BooksController < ApplicationController
-  before_action :set_book, only: %i[show edit update destroy book_detail checkout return_book]
-  before_action :authenticate_user!, except: %i[index show]
+  before_action :set_book, only: %i[show edit update destroy book_issue_request book_return_request]
   def index
-    # @books = if params[:search]
-    #            Book.search(params[:search]).order('created_at desc')
-    #          else
-    #            Book.all.order('created_at desc')
-    #          end
-    @q = Book.ransack(params[:q])
-    @books = @q.result
-  end
-
-  def book_list
-    @q = Book.ransack(params[:q])
-    @books = @q.result
+    authorize :book
+    @books = if params[:search]
+               Book.search(params[:search]).order('created_at desc')
+             else
+               Book.all.order('created_at desc')
+             end
   end
 
   def new
+    authorize :book
     @book = Book.new
   end
 
   def create
     @book = Book.new(book_params)
+
     authorize(@book)
+
     @book.library_id = current_user.library.id
     if @book.save
-      redirect_to books_path, notice: 'book created'
+      redirect_to books_path, notice: 'book created successfully.'
     else
-      redirect_to new_book_path
+      render :new, status: 500
     end
   end
 
-  def checkout
-    @book_issue_request = BookRequest.new
-    @book_issue_request.book_id = @book.id
-    @book_issue_request.students_id = current_user.id
-    @book_issue_request.library_id = @book.library_id
-    @book_issue_request.request_from = Date.current
-    @book_issue_request.request_to = Date.current + 7
-    @book_issue_request.request_for = 'issue'
-    if @book_issue_request.save
-      @bookissuerequest = BookRequest.where(students_id: current_user.id)
+  def book_issue_request
+    authorize @book
+    create_request
+    @book_request.issue_from_date = Date.current
+    @book_request.issue_till_date = Date.current + 7
+    @book_request.request_for = 'issue'
+    if @book_request.save
+      @bookissuerequest = BookRequest.where(student_id: current_user.id)
       @bks = Book.where(id: @bookissuerequest.pluck(:book_id))
     else
-      render 'book_detail'
+      render 'show'
     end
   end
 
-  def return_book
-    @book_return_request = BookRequest.new
-    @book_return_request.book_id = @book.id
-    @book_return_request.students_id = current_user.id
-    @book_return_request.library_id = @book.library_id
-    @book_return_request.request_for = 'return'
-    @book_return_request.save
-    return unless @book.issued_to_at < Date.current
+  def book_return_request
+    # use transaction here
+    authorize @book
+    create_request
+    @book_request.request_for = 'return'
+    @book_request.save
 
-    bookdue = BookDue.new
-    bookdue.book_id = @book.id
-    bookdue.student_id_id = current_user.id
-    bookdue.fine = (Date.current.to_date - @book.issued_to_at.to_date).to_i * 5
-    bookdue.save
+    apply_fine if is_book_overdue?
   end
 
-  def book_detail
-    @book_issue_request = BookRequest.find_by(book_id: @book.id, students_id: current_user.id)
-  end
+  # delete it
+  # def book_detail
+  #   @book_issue_request = BookRequest.find_by(book_id: @book.id, student_id: current_user.id)
+  # end
 
-  def show; end
+  def show
+    authorize @book
+    return unless current_user.student?
+
+    @book_issue_request = BookRequest.find_by(book_id: @book.id, student_id: current_user.id)
+  end
 
   def edit
     authorize @book
   end
 
   def update
+    authorize @book
     if @book.update(book_params)
-      redirect_to books_path(@book), notice: 'book updated'
+      redirect_to books_path(@book), notice: 'book updated successfully'
     else
-      render edit
+      render :edit
     end
   end
 
   def destroy
+    authorize @book
     @book.destroy
-    redirect_to books_path, notice: 'book deleted'
+    redirect_to books_path, notice: 'book deleted successfully'
   end
 
   private
@@ -98,5 +94,23 @@ class BooksController < ApplicationController
 
   def set_book
     @book = Book.find(params[:id])
+  end
+
+  def apply_fine
+    bookdue = @book.book_dues.new(student_id: current_user.id, fine: calculate_fine)
+    bookdue.save
+  end
+
+  def create_request
+    @book_request = BookRequest.new(book_id: @book.id, student_id: current_user.id, library_id: @book.library_id)
+    @book_request.save
+  end
+
+  def calculate_fine
+    (Date.current.to_date - @book.issued_to_at.to_date).to_i * 5
+  end
+
+  def is_book_overdue?
+    @book.issued_to_at < Date.current
   end
 end

@@ -35,8 +35,6 @@ class UsersController < ApplicationController
     redirect_to users_path, notice: 'user has been destroyed'
   end
 
-  
-
   private
 
   def student_params

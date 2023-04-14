@@ -1,6 +1,9 @@
 class BookRequest < ApplicationRecord
-  acts_as_paranoid
-  validates :book_id, uniqueness: { scope: [:students_id] }
+  belongs_to :student, class_name: 'User'
+  belongs_to :book
+  belongs_to :library
 
-  enum request_for: { issue: 'issue', return_b: 'return' }
+  validates :book_id, uniqueness: { scope: [:student_id] }
+
+  enum request_for: { issue: 'issue', return: 'return' }
 end

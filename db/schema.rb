@@ -10,33 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_22_085507) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_31_113338) do
   create_table "book_dues", force: :cascade do |t|
     t.integer "book_id"
-    t.integer "students_id_id"
+    t.integer "student_id"
     t.integer "fine"
-    t.datetime "return_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["book_id"], name: "index_book_dues_on_book_id"
-    t.index ["students_id_id"], name: "index_book_dues_on_students_id_id"
+    t.index ["student_id"], name: "index_book_dues_on_student_id"
   end
 
   create_table "book_requests", force: :cascade do |t|
     t.integer "book_id"
     t.integer "library_id"
-    t.integer "students_id"
-    t.datetime "request_to"
-    t.datetime "request_from"
     t.boolean "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
     t.string "request_for"
+    t.integer "student_id"
+    t.datetime "issue_from_date"
+    t.datetime "issue_till_date"
     t.index ["book_id"], name: "index_book_requests_on_book_id"
-    t.index ["deleted_at"], name: "index_book_requests_on_deleted_at"
     t.index ["library_id"], name: "index_book_requests_on_library_id"
-    t.index ["students_id"], name: "index_book_requests_on_students_id"
   end
 
   create_table "books", force: :cascade do |t|
@@ -94,10 +90,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_22_085507) do
   end
 
   add_foreign_key "book_dues", "books"
-  add_foreign_key "book_dues", "users", column: "students_id_id"
+  add_foreign_key "book_dues", "users", column: "student_id"
   add_foreign_key "book_requests", "books"
   add_foreign_key "book_requests", "libraries"
-  add_foreign_key "book_requests", "users", column: "students_id"
   add_foreign_key "books", "libraries"
   add_foreign_key "books", "users", column: "issued_to_id"
   add_foreign_key "histories", "books"

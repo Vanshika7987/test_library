@@ -8,21 +8,22 @@ Rails.application.routes.draw do
   resources :users
   resources :books do
     collection do
-      get :book_list
+      # get :book_list
+      # get :book_issue_requests
     end
   end
   resources :books do
     member do
-      get :book_detail
-      get :checkout
-      get :return_book
+      # get :book_detail
+      get :book_issue_request
+      get :book_return_request
     end
   end
 
   resources :students do
     collection do
       get :profile
-      get :myhistory
+      get :my_history
     end
   end
   # resources :librarians
