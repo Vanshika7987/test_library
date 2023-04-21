@@ -1,26 +1,75 @@
 <h1>Book details</h1>
-    <p><strong>name:</strong><%= @book.name%></p>
-    <p><strong>library_id:</strong><%= @book.library_id%></p>
-    <p><strong>language:</strong><%= @book.language%></p>
-    <p><strong>author:</strong><%= @book.author%></p>
-    <% if current_user.librarian? %>
-        <p><strong>issued to:</strong><%= @book.issued_to_id%></p>
-        <p><strong>author:</strong><%= @book.issued_to_at %></p>
-        <p><strong>author:</strong><%= @book.issued_from_at%></p>
-        
-        <%= link_to 'edit', edit_book_path %>
-        <%= link_to "Back", :back %>
+    <table class ="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Library_id</th>
+                <th>Language</th>
+                <th>Author</th>
+                <% if current_user.librarian? %>
+                <th>Issued to id </th>
+                <th>Issued from date</th>
+                <th>Issued till date</th>
+                <%end%>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><%= @book.name%></th>
+                <th><%= @book.library_id%></th>
+                <th><%= @book.language%></th>
+                <th><%= @book.author%></th>
+                <% if current_user.librarian? %>
+                <th><%= @book.issued_to_id%></th>
+                <th><%= @book.issued_from_at%></th>
+                <th><%= @book.issued_to_at%></th>
+                <%end%>
+            </tr>
+        </tbody>
+    </table>
+    <% if current_user.librarian? %>        
+        <%= link_to 'edit', edit_book_path, class: "btn btn-primary" %>
+        <%= link_to "Back", :back, class: "btn btn-primary" %>
     <% else %>
         <b>
         <% if @book_issue_request == nil %>
             <% if @book.issued_to_id ==  current_user.id %>
                 <%= 'alredy you have it' %>
-                <%= link_to 'request_for _return', book_issue_request_book_path %>
+                <%= link_to 'request_for _return', book_issue_request_book_path, class: "btn btn-primary" %>
             <% else %>
-                <%= link_to 'request_for issue', book_issue_request_book_path %>
+                <%= link_to 'request_for issue', book_issue_request_book_path, class: "btn btn-primary" %>
             <% end %>
         <% else %>
             <%= 'Book is already requested by you' %>
         <% end %>
         </b>
     <% end %>
+<%# <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td colspan="2">Larry the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table> %>

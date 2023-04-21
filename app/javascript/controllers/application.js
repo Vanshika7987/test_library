@@ -1,5 +1,12 @@
 import { Application } from "@hotwired/stimulus"
 
+// import "jquery"
+// import "jquery_ujs"
+import "@popperjs/core";
+import "bootstrap";
+// import "@fortawesome/fontawesome-free";
+// import "my_script";
+
 const application = Application.start()
 
 // Configure Stimulus development experience

@@ -1,12 +1,15 @@
 <h1>Book Details</h1>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
 <% if current_user.librarian? %>
-  <td><%= link_to 'new book', new_book_path %></td>
+   <%= link_to 'New Book', new_book_path, class: "navbar-brand" %>
 <% end %>
 <%= form_tag(books_path, :method => "get", id: "search-form") do %>
   <%= text_field_tag :search, params[:search], placeholder: "Search books" %>
-  <%= submit_tag "Search" %> 
+  <%= submit_tag "Search", class: "btn btn-outline-primary" %> 
 <% end %>
-<table>
+</nav>
+<table class="table" class="table table-striped">
   <thead>
     <tr>
       <%# <th>Library_id</th> %>
@@ -23,12 +26,13 @@
         <td><%= book.name %></td>
         <td><%= book.author %></td>
         <td><%= book.language %></td>
-        <td><%= link_to 'Show', book_path(book)%> </td>
+        <td><%= link_to 'Show', book_path(book), class: "btn btn-primary"%></td>
         <% if current_user.librarian? %>
-          <td><%= link_to 'Edit', edit_book_path(book) %></td>
-          <td><%= link_to "Destroy", book_path(book.id), method: "DELETE" %></td>         
+          <td><%= link_to 'Edit', edit_book_path(book), class: "btn btn-primary" %></td>
+          <td><%= link_to "Destroy", book_path(book.id), method: "DELETE", class: "btn btn-primary" %></td>         
         <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
+

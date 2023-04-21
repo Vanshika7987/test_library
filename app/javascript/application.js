@@ -2,11 +2,10 @@
 // import Rails from "@rails/ujs";
 // Rails.start();
 import "@hotwired/turbo-rails"
-import "controllers"
 import "jquery"
 import "jquery_ujs"
-import "custom/main"
-import "@popperjs/core";
+// import "custom/main"
+// import "@popperjs/core";
 import "bootstrap";
-import "@fortawesome/fontawesome-free";
-import "my_script";
+// import "@fortawesome/fontawesome-free";
+// import "my_script";

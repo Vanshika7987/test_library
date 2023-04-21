@@ -14,7 +14,14 @@ class User < ApplicationRecord
 
   enum role: { student: 0, librarian: 1 }
 
-  before_create :message
+  after_save :create_library
+  def create_library
+    return unless librarian?
+
+    library = Library.create(name: name, address: 'indore', librarian_id: id)
+    library.save
+  end
+
   def message
     puts 'we are creating your account'
   end

@@ -1,4 +1,4 @@
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Student name</th>
@@ -6,8 +6,7 @@
       <th>Books name</th>
       <th>Author</th>
       <th>Language</th>
-      <th>approve</th>
-      <th>ignore</th>
+      <th>Requested for</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -21,8 +20,8 @@
         <td><%= request.book.author %></td>
         <td><%= request.book.language %></td>
         <td><%= request.request_for %></td>
-        <td class = 'approve'><button>approve</button></td>
-        <td class = 'ignore'><button>ignore</button></td>
+        <td class = 'approve'><button class="btn btn-outline-success" >approve</button></td>
+        <td class = 'ignore'><button class="btn btn-outline-danger" >ignore</button></td>
         </div>
         </tr>
     <% end %>

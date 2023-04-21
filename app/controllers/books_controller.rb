@@ -15,11 +15,12 @@ class BooksController < ApplicationController
   end
 
   def create
+    UserMailer.welcome(current_user).perform_now
     @book = Book.new(book_params)
-
+    library = Library.find_by(librarian_id: current_user.id)
     authorize(@book)
 
-    @book.library_id = current_user.library.id
+    @book.library_id = library.id
     if @book.save
       redirect_to books_path, notice: 'book created successfully.'
     else
