@@ -15,7 +15,7 @@ class BooksController < ApplicationController
   end
 
   def create
-    UserMailer.welcome(current_user).perform_now
+    # UserMailer.welcome(current_user).deliver_now
     @book = Book.new(book_params)
     library = Library.find_by(librarian_id: current_user.id)
     authorize(@book)

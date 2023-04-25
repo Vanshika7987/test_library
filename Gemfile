@@ -78,6 +78,7 @@ gem 'jquery-rails'
 gem 'kaminari'
 # gem 'paranoia'
 gem 'bootstrap', '~> 5.2.0'
+gem 'letter_opener', group: :development
 gem 'mailjet'
 gem 'pundit'
 gem 'ransack'
