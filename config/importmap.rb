@@ -13,3 +13,5 @@ pin 'bootstrap', to: 'bootstrap.min.js', preload: true
 pin '@popperjs/core', to: 'popper.js', preload: true
 # pin 'my_script', to: 'my_script.js', preload: true
 pin '@rails/ujs', to: 'https://ga.jspm.io/npm:@rails/ujs@7.0.4-3/lib/assets/compiled/rails-ujs.js'
+pin "@rails/actioncable", to: "actioncable.esm.js"
+pin_all_from "app/javascript/channels", under: "channels"

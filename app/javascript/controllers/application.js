@@ -4,6 +4,7 @@ import { Application } from "@hotwired/stimulus"
 // import "jquery_ujs"
 import "@popperjs/core";
 import "bootstrap";
+import "./channels"
 // import "@fortawesome/fontawesome-free";
 // import "my_script";
 

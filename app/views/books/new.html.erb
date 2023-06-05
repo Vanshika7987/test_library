@@ -14,4 +14,9 @@
     <%= form.submit :Create, class: "btn btn-primary"%>
   </div>
 <% end %>
+
+<%= form_with url: '/books/upload', method: :post, local: true, multipart: true do |form| %>
+  <%= form.file_field :excel_file %>
+  <%= form.submit 'Upload' %>
+<% end %>
 </div>

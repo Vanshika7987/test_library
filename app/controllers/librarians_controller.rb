@@ -1,5 +1,6 @@
 class LibrariansController < ApplicationController
   before_action :set_book_request, only: %i[approve ignore]
+  after_action :verify_authorized, except: %i[approve ignore]
 
   def index
     authorize :user
@@ -20,7 +21,6 @@ class LibrariansController < ApplicationController
   end
 
   def approve
-    authorize :user
     @book_request.status = true
     @book_request.save
     book = Book.find_by(id: @book_request.book_id)
@@ -32,7 +32,7 @@ class LibrariansController < ApplicationController
       @history.save
       book.issued_from_at = Date.current
       book.issued_to_at = Date.current + 7
-      book.issued_to_id = @book_request.students_id
+      book.issued_to_id = @book_request.student_id
     else
       @history.event = 'returned'
       @history.save
@@ -45,9 +45,14 @@ class LibrariansController < ApplicationController
   end
 
   def ignore
-    authorize :user
     @book_request.destroy
   end
+
+  def message_broadcast
+    ActionCable.server.broadcast('chat_channel', params[:message])
+  end
+
+
 
   private
 

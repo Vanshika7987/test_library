@@ -1,5 +1,5 @@
+<div class="container">
 <h2>Sign up</h2>
-
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= render "users/shared/error_messages", resource: resource %>
 
@@ -19,6 +19,18 @@
       <%= f.label :role%>
       <%= f.select :role, User.roles.keys%><br>
   </div>
+  <div class= "field" id = "countries">
+      <%= f.label :country%>
+      <%= f.select :country, options_for_select(CS.countries.map { |c| [c[1], c[0]] } )%><br>
+  </div>
+  <div class="field" id = "states">
+      <%= f.label :state %>
+      <%= f.select :state, options_for_select([]) %>
+    </div>
+    <div class="field" id = "cities">
+      <%= f.label :city %>
+      <%= f.select :city, options_for_select([]) %>
+    </div>
   <div class="field">
     <%= f.label :password %>
     <% if @minimum_password_length %>
@@ -33,8 +45,9 @@
   </div>
   
   <div class="actions">
-    <%= f.submit "Sign up" %>
+    <%= f.submit "Sign up", class: "btn btn-primary" %>
   </div>
 <% end %>
 
 <%= render "users/shared/links" %>
+</div>

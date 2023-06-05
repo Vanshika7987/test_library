@@ -5,6 +5,7 @@
     <%= link_to 'Edit', edit_user_registration_path, class: "navbar-brand" %>
     <%= link_to 'Books', books_path, class: "navbar-brand" %>
     <%= link_to 'My Requests', get_books_for_approval_librarians_path, class: "navbar-brand" %>
+    <%= link_to 'create student', new_user_registration_path , class: "navbar-brand" %>
     <%= link_to "Log Out", destroy_user_session_path, method: :delete, class: "navbar-brand" %>
     <%= link_to "Back", :back, class: "navbar-brand" %>
     </div>
@@ -12,5 +13,11 @@
     <p><strong>Name:</strong><%= current_user.name%></p>
     <p><strong>Role:</strong><%= current_user.role%></p>
     <p><strong>Phone Number:</strong><%= current_user.phone_number%></p>
+<%= form_tag(message_broadcast_librarians_path, :method => "get") do %>
+    <%= label_tag :message, 'message'%>
+    <%= text_field_tag :message, placeholder: "send message" %>
+    <%= submit_tag 'send'%>
+<%end%>
+
 
 

@@ -1,5 +1,6 @@
 class BooksController < ApplicationController
   before_action :set_book, only: %i[show edit update destroy book_issue_request book_return_request]
+  skip_after_action :verify_authorized, only: [:upload]
   def index
     authorize :book
     @books = if params[:search]
@@ -81,6 +82,31 @@ class BooksController < ApplicationController
     authorize @book
     @book.destroy
     redirect_to books_path, notice: 'book deleted successfully'
+  end
+
+  def upload
+    excel_file = params[:excel_file]
+
+    if excel_file.present?
+      # debugger
+      spreadsheet = Roo::Spreadsheet.open(excel_file.tempfile)
+      # sheet = spreadsheet.sheet(0)
+       (2..spreadsheet.last_row).each do |row|
+        # debugger
+        data = spreadsheet.row(row)
+        name =         data[0]
+        author =       data[1]
+        language =     data[2]
+        library =      data[3]
+        Book.create(name: name, author: author, language: language, library_id: library)
+
+        flash[:success] = 'Data imported successfully'
+
+      end
+        flash[:error] = 'please select valid file'
+    else
+        redirect_to action: 'index'
+    end
   end
 
   private
