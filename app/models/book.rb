@@ -5,6 +5,7 @@ class Book < ApplicationRecord
   has_many :book_requests, dependent: :destroy
   has_many :histories, dependent: :destroy
 
+  has_one_attached :image
   validates :name, presence: { message: 'name cant be blank' }
   validates :author, presence: { message: 'author name cant be blank' }
   validates :language, presence: { message: 'language cant be blank' }

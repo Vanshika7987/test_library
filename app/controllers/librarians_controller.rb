@@ -52,6 +52,10 @@ class LibrariansController < ApplicationController
     ActionCable.server.broadcast('chat_channel', params[:message])
   end
 
+  def message_job
+    MessageJob.perform_later(params[:message])
+  end
+
 
 
   private

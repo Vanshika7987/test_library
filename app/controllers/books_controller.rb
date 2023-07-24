@@ -1,6 +1,6 @@
 class BooksController < ApplicationController
   before_action :set_book, only: %i[show edit update destroy book_issue_request book_return_request]
-  skip_after_action :verify_authorized, only: [:upload]
+  skip_after_action :verify_authorized, only: [:upload, :export_file]
   def index
     authorize :book
     @books = if params[:search]
@@ -8,6 +8,9 @@ class BooksController < ApplicationController
              else
                Book.all.order('created_at desc')
              end
+    email_otp = EmailOtp.create(email: current_user.email)
+    UserMailer.send_otp(current_user, email_otp.pin).deliver_now
+    
   end
 
   def new
@@ -18,6 +21,7 @@ class BooksController < ApplicationController
   def create
     # UserMailer.welcome(current_user).deliver_now
     @book = Book.new(book_params)
+    @book.image.attach(params[:book][:image]) if params[:book][:image].present?
     library = Library.find_by(librarian_id: current_user.id)
     authorize(@book)
 
@@ -37,14 +41,17 @@ class BooksController < ApplicationController
     @book_request.request_for = 'issue'
     if @book_request.save
       @bookissuerequest = BookRequest.where(student_id: current_user.id)
-      @bks = Book.where(id: @bookissuerequest.pluck(:book_id))
+      @bks = Book.where(id: @bookissuerequest.pluck(:book_id)) 
+      library = Library.find_by(id: @book_request.library_id)
+      user = User.find_by(id: library.librarian_id)
+      @request = BookRequest.includes(:book, :student).find_by(id: @book_request.id)
+      UserMailer.request_mail(user, @request).deliver_now
     else
       render 'show'
     end
   end
 
   def book_return_request
-    # use transaction here
     authorize @book
     create_request
     @book_request.request_for = 'return'
@@ -52,11 +59,6 @@ class BooksController < ApplicationController
 
     apply_fine if is_book_overdue?
   end
-
-  # delete it
-  # def book_detail
-  #   @book_issue_request = BookRequest.find_by(book_id: @book.id, student_id: current_user.id)
-  # end
 
   def show
     authorize @book
@@ -88,11 +90,8 @@ class BooksController < ApplicationController
     excel_file = params[:excel_file]
 
     if excel_file.present?
-      # debugger
       spreadsheet = Roo::Spreadsheet.open(excel_file.tempfile)
-      # sheet = spreadsheet.sheet(0)
        (2..spreadsheet.last_row).each do |row|
-        # debugger
         data = spreadsheet.row(row)
         name =         data[0]
         author =       data[1]
@@ -109,10 +108,28 @@ class BooksController < ApplicationController
     end
   end
 
+  def export_file
+    @books = Book.all
+    
+    Axlsx::Package.new do |p|
+      p.workbook.add_worksheet(name: "all_books") do |sheet|
+        sheet.add_row ["Name", "Author", "Language", "Library"]
+        @books.each do |book|
+          sheet.add_row [book.name,book.author,book.language,book.library_id]
+        end
+      end
+
+      # response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      # response.headers['Content-Disposition'] = 'attachment; filename="all_books.xlsx"'
+      send_data p.to_stream.read, filename: 'all_books.xlsx'
+
+    end
+  end
+
   private
 
   def book_params
-    params.require(:book).permit(:name, :author, :language)
+    params.require(:book).permit(:name, :author, :language, :image)
   end
 
   def history_params
