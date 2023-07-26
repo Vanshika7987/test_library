@@ -13,7 +13,6 @@ class UsersController < ApplicationController
   end
 
   def create
-    debugger
     @user = User.new(student_params)
     if @user.save
       redirect_to users_path, notice: 'user has been created'

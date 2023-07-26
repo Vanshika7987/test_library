@@ -7,23 +7,17 @@ class UserMailer < ApplicationMailer
   def welcome(user)
     @user = user
     mail(to: @user.email, subject: 'welcome to library-management')
+  end
 
-    # variable = Mailjet::Send.create(messages: [{
-    #                                   'From' => {
-    #                                     'Email' => 'vanshikakumrawat889@outlook.com',
-    #                                     'Name' => 'Me'
-    #                                   },
-    #                                   'To' => [
-    #                                     {
-    #                                       'Email' => @user.email,
-    #                                       'Name' => 'You'
-    #                                     }
-    #                                   ],
-    #                                   'Subject' => 'My first Mailjet Email!',
-    #                                   'TextPart' => 'Greetings from Mailjet!',
-    #                                   'HTMLPart' => '<h3>Dear passenger 1, welcome to <a href=\'https://www.mailjet.com/\'>Mailjet</a>!</h3><br />May the delivery force be with you!'
-    #                                 }])
+  def request_mail(user, book_request)
+    @user = user
+    @book_request = book_request
+    mail(to: @user.email, subject: 'you recieved book request')
+  end
 
-    # variable.attributes[:messages]
+  def send_otp(user,otp)
+    @user = user
+    @otp =otp
+    mail(to: @user.email, subject: "otp for login")
   end
 end

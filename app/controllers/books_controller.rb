@@ -34,6 +34,7 @@ class BooksController < ApplicationController
   end
 
   def book_issue_request
+    # debugger
     authorize @book
     create_request
     @book_request.issue_from_date = Date.current
@@ -45,6 +46,7 @@ class BooksController < ApplicationController
       library = Library.find_by(id: @book_request.library_id)
       user = User.find_by(id: library.librarian_id)
       @request = BookRequest.includes(:book, :student).find_by(id: @book_request.id)
+      # debugger
       UserMailer.request_mail(user, @request).deliver_now
     else
       render 'show'
