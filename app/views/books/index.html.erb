@@ -3,12 +3,14 @@
   <div class="container-fluid">
 <% if current_user.librarian? %>
    <%= link_to 'New Book', new_book_path, class: "navbar-brand" %>
+   <%= link_to 'Download', export_file_books_path, class: "navbar-brand"  %>
 <% end %>
 <%= form_tag(books_path, :method => "get", id: "search-form") do %>
   <%= text_field_tag :search, params[:search], placeholder: "Search books" %>
   <%= submit_tag "Search", class: "btn btn-outline-primary" %> 
 <% end %>
 </nav>
+
 <table class="table" class="table table-striped">
   <thead>
     <tr>

@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
-  devise_for :users
+  devise_for :users, controllers: {
+    omniauth_callbacks: 'users/omniauth_callbacks'
+  }
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   
@@ -20,15 +22,15 @@ Rails.application.routes.draw do
       # get :book_list
       # get :book_issue_requests
       post :upload
+      get :export_file
     end
-  end
-  resources :books do
     member do
       # get :book_detail
       get :book_issue_request
       get :book_return_request
     end
   end
+ 
 
   resources :students do
     collection do
@@ -43,14 +45,13 @@ Rails.application.routes.draw do
       get :profile
       get :get_books_for_approval
       get :message_broadcast
-      
+      get :message_job
     end
-  end
-  resources :librarians do
     member do
       get :approve
       get :ignore
     end
   end
+  resources :payments
   mount ActionCable.server => '/cable'
 end

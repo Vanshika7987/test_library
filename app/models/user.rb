@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :omniauthable, omniauth_providers: [:google_oauth2]
 
   paginates_per 5
 
@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :books
   has_one :library, foreign_key: 'librarian_id'
 
-  validates :name, :role, :phone_number, presence: true
+  # validates :name, :role, :phone_number, presence: true
 
   enum role: { student: 0, librarian: 1 }
   after_save :create_library
@@ -29,5 +29,17 @@ class User < ApplicationRecord
     return nil if librarian?
 
     Book.where(issued_to_id: id)
+  end
+
+
+  def self.from_google(auth)
+    # binding.pry
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      # binding.pry
+      user.email = auth.info.email,
+      user.password = Devise.friendly_token[0, 20],
+      user.name = auth.info.name
+      user.save
+    end
   end
 end
